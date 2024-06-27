@@ -13,7 +13,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const MobileNav = () => {
   return (
-    <nav className="md:hidden transition-all duration-200 h-fit">
+    <nav className="lg:hidden transition-all duration-200 h-fit">
       <Sheet>
         <SheetTrigger>
           <RiMenu3Fill className="pt-[5px]" size={22} />
@@ -26,7 +26,7 @@ const MobileNav = () => {
           <NavLinks />
           <SheetFooter>
             <SignedOut>
-              <Button>
+              <Button className="w-full">
                 <Link className="w-full" href="/sign-in">
                   Sign in
                 </Link>

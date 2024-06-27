@@ -10,18 +10,18 @@ const Header = () => {
   return (
     <>
       <header className="sticky top-0 bg-background">
-        <div className="w-full flex justify-between my-5 md:px-40 px-10 transition-all duration-200 items-center">
+        <div className="w-full flex justify-between my-5 lg:px-40 px-10 transition-all duration-200 items-center">
           <div className="flex gap-8 items-center transition-all duration-200">
             <h1 className="font-variable md:text-2xl text-xl font-bold text-accent transition-all duration-200">
               <Link href="/">EventGuru</Link>
             </h1>
-            <div className="md:block hidden">
+            <div className="lg:block hidden">
               <NavLinks />
             </div>
           </div>
           <div>
             <SignedIn>
-              <div className="flex md:gap-5 gap-2 items-center">
+              <div className="flex lg:gap-5 gap-2 items-center">
                 <UserButton afterSignOutUrl="/" />
                 <MobileNav />
               </div>

@@ -27,7 +27,7 @@ export default function Home() {
         </div>
         <div className="text-black">
           <Image
-            className="rounded-lg object-contain origin-center max-h-[70vh]"
+            className="rounded-lg object-contain max-h-[70vh] skew-y-6 origin-left"
             src="/hero-1.jpg"
             alt="A Banner Image"
             width={1100}
