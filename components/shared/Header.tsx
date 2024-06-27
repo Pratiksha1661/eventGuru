@@ -4,35 +4,43 @@ import React from "react";
 import { Button } from "../ui/button";
 import MobileNav from "./MobileNav";
 import NavLinks from "./NavLinks";
+import { Separator } from "@/components/ui/separator";
 
 const Header = () => {
   return (
-    <header className="w-full flex justify-between my-5 px-10 transition-all duration-200">
-      <div className="flex gap-8 items-center transition-all duration-200">
-        <h1 className="font-variable md:text-2xl text-xl font-bold text-accent transition-all duration-200">
-          <Link href="/">EventGuru</Link>
-        </h1>
-        <div className="md:block hidden">
-          <NavLinks />
+    <>
+      <header className="sticky top-0 bg-background">
+        <div className="w-full flex justify-between my-5 md:px-40 px-10 transition-all duration-200 items-center">
+          <div className="flex gap-8 items-center transition-all duration-200">
+            <h1 className="font-variable md:text-2xl text-xl font-bold text-accent transition-all duration-200">
+              <Link href="/">EventGuru</Link>
+            </h1>
+            <div className="md:block hidden">
+              <NavLinks />
+            </div>
+          </div>
+          <div>
+            <SignedIn>
+              <div className="flex md:gap-5 gap-2 items-center">
+                <UserButton afterSignOutUrl="/" />
+                <MobileNav />
+              </div>
+            </SignedIn>
+            <SignedOut>
+              <div className="flex gap-5 items-center">
+                <Button>
+                  <Link className="w-full" href="/sign-in">
+                    Sign in
+                  </Link>
+                </Button>
+                <MobileNav />
+              </div>
+            </SignedOut>
+          </div>
         </div>
-      </div>
-      <div>
-        <SignedIn>
-          <div className="flex gap-5 items-center">
-            <MobileNav />
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </SignedIn>
-        <SignedOut>
-          <div className="flex gap-5 items-center">
-            <Button>
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
-            <MobileNav />
-          </div>
-        </SignedOut>
-      </div>
-    </header>
+        <Separator className="my-0" />
+      </header>
+    </>
   );
 };
 
