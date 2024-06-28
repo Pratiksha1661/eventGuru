@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import { ICategory } from "@/lib/database/models/category.model";
 import { useState } from "react";
+import { eventCategories } from "@/constants";
 
 type DropdownProps = {
   value: string;
@@ -14,7 +15,7 @@ type DropdownProps = {
 };
 
 const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
-  const [category, setCategory] = useState<ICategory[]>([]);
+  const [category, setCategory] = useState<ICategory[]>(eventCategories as ICategory[]);
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>

@@ -17,6 +17,9 @@ import {
 import { eventDefaultValues } from "@/constants";
 import { Input } from "@/components/ui/input";
 import Dropdown from "./Dropdown";
+import { Textarea } from "../ui/textarea";
+import { FileUpload } from "./FileUpload";
+import { useState } from "react";
 
 type eventFormProps = {
   userId: String;
@@ -24,6 +27,8 @@ type eventFormProps = {
 };
 
 const EventForm = ({ userId, type }: eventFormProps) => {
+  const [files, setFiles] = useState<File[]>([]);
+
   const defaultValues = eventDefaultValues;
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,6 +68,38 @@ const EventForm = ({ userId, type }: eventFormProps) => {
                   <Dropdown
                     onChangeHandler={field.onChange}
                     value={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    className="h-40"
+                    placeholder="Event Description"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <FileUpload
+                    onFieldChange={field.onChange}
+                    imageUrl={field.value}
+                    setFiles={setFiles}
                   />
                 </FormControl>
                 <FormMessage />

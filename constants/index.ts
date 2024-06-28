@@ -33,3 +33,11 @@ export const eventDefaultValues = {
   isFree: false,
   url: "",
 };
+
+export const eventCategories = [
+    {_id: "1", name: "Music"},
+    {_id: "2", name: "Food"},
+    {_id: "3", name: "Art"},
+    {_id: "4", name: "Business"},
+    {_id: "5", name: "Networking"},
+]
