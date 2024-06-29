@@ -15,7 +15,7 @@ const CreateEvent = () => {
             Create Event
           </h3>
         </div>
-        <div id="create-event-form">
+        <div id="create-event-form" className="md:mx-44 my-3">
           <EventForm userId={userId} type="Create" />
         </div>
       </div>
