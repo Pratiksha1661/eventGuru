@@ -18,19 +18,23 @@ import Dropdown from "./Dropdown";
 import { Textarea } from "../ui/textarea";
 import { FileUpload } from "./FileUpload";
 import { useState } from "react";
-// import { DatePicker } from "@/components/shared/DatePicker";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Checkbox } from "../ui/checkbox";
+import { useUploadThing } from "@/lib/uploadthing";
+import { createEvent } from "@/lib/actions/event.actions";
+import { useRouter } from "next/navigation";
 
 type eventFormProps = {
-  userId: String;
+  userId: string;
   type: "Create" | "Edit";
 };
 
 const EventForm = ({ userId, type }: eventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
-
+  const { startUpload } = useUploadThing('imageUploader')
+  const router = useRouter();
   const defaultValues = eventDefaultValues;
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,8 +42,35 @@ const EventForm = ({ userId, type }: eventFormProps) => {
     defaultValues: defaultValues,
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    let uploadedImageUrl = values.imageUrl;
+
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files)
+
+      if (!uploadedImages) {
+        return
+      }
+
+      uploadedImageUrl = uploadedImages[0].url
+    }
+
+    if (type === 'Create') {
+      try {
+        const newEvent = await createEvent({
+          event: { ...values, imageUrl: uploadedImageUrl },
+          userId,
+          path: '/profile'
+        })
+
+        if (newEvent) {
+          form.reset();
+          router.push(`/events/${newEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   return (
@@ -70,12 +101,9 @@ const EventForm = ({ userId, type }: eventFormProps) => {
                 control={form.control}
                 name="categoryId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormControl>
-                      <Dropdown
-                        onChangeHandler={field.onChange}
-                        value={field.value}
-                      />
+                      <Dropdown onChangeHandler={field.onChange} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,20 +216,59 @@ const EventForm = ({ userId, type }: eventFormProps) => {
           </div>
 
           {/* Ticket Price */}
+          <div className="flex sm:items-center gap-3 flex-col sm:flex-row">
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <>
+                      <Input type="number" placeholder="Price" {...field} />
+                    </>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
+            <FormField
+              control={form.control}
+              name="isFree"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormControl>
+                    <div className="flex items-center">
+                      <label htmlFor="isFree" className="whitespace-nowrap pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-xs md:text-sm">Free Ticket</label>
+                      <Checkbox
+                        onCheckedChange={field.onChange}
+                        checked={field.value}
+                        id="isFree" className="mr-2 h-5 w-5 border-2 border-primary-500" />
+                    </div>
+
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* URL Field */}
           <FormField
             control={form.control}
-            name="price"
+            name="url"
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem>
                 <FormControl>
-                  <Input type="number" placeholder="Price" {...field} />
+                  <Input placeholder="URL" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button disabled={form.formState.isSubmitting} type="submit">{form.formState.isSubmitting ? ('Please wait...') : `${type} Event`}</Button>
         </form>
       </Form>
     </>

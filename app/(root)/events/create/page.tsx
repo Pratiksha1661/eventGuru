@@ -7,6 +7,8 @@ const CreateEvent = () => {
 
   const userId = sessionClaims?.userId as string;
 
+  console.log(userId)
+
   return (
     <section className="md:my-10 my-9 lg:px-40 px-10">
       <div className="flex flex-col">
