@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 const Header = () => {
   return (
     <>
-      <header className="sticky top-0 bg-transparent backdrop-blur-sm">
+      <header className="sticky top-0 bg-transparent backdrop-blur-sm shadow-md">
         <div className="w-full flex justify-between my-5 lg:px-40 px-10 transition-all duration-200 items-center">
           <div className="flex gap-8 items-center transition-all duration-200">
             <h1 className="font-variable md:text-2xl text-xl font-bold text-accent transition-all duration-200">
@@ -38,7 +38,6 @@ const Header = () => {
             </SignedOut>
           </div>
         </div>
-        <Separator className="my-0" />
       </header>
     </>
   );

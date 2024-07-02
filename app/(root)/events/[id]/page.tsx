@@ -1,4 +1,4 @@
-import { getEvent } from '@/lib/actions/event.actions'
+import { getEvent, getEventByCategory } from '@/lib/actions/event.actions'
 import { SearchParamProps } from '@/types'
 import { formatDateTime } from '@/lib/utils'
 
@@ -15,8 +15,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaLink } from "react-icons/fa6";
 
-const EventDetails = async ({ params: { id } }: SearchParamProps) => {
+const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
     const event = await getEvent(id);
+
+    const relatedEvents = await getEventByCategory({
+        categoryId: event.category._id,
+        eventId: event._id,
+        page: searchParams.page as string,
+    })
 
     return (
         <>
@@ -83,6 +89,13 @@ const EventDetails = async ({ params: { id } }: SearchParamProps) => {
                 <div className='flex flex-col gap-2 my-3 mx-10 lg:mx-0'>
                     <h5 className='font-semibold text-lg'>About this Event</h5>
                     <p>{event.description}</p>
+                </div>
+            </section>
+            <section>
+                <Separator className='my-5' />
+                <div className='lg:mx-40 mx-10'>
+                    <h3 className='font-semibold text-2xl text-center'>Some Related Events</h3>
+
                 </div>
             </section>
         </>

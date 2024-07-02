@@ -1,11 +1,24 @@
+"use client"
+
 import CollectionCard from "@/components/shared/CollectionCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { getAllEvents } from "@/lib/actions/event.actions";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [event, setEvents] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const allEvents = await getAllEvents();
+      setEvents(allEvents);
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <section className="md:my-10 my-9 lg:mx-40 mx-10">
@@ -48,28 +61,20 @@ export default function Home() {
           <h3 className="font-bold text-2xl">Some Hosted Events</h3>
         </div>
         <div className="flex gap-4 md:justify-between justify-center flex-wrap mt-1">
-          <Link href="/events/6681ec97226737b3b74a8f85">
-            <CollectionCard
-              title="Event 1"
-              startDateTime="2024-12-12 12:00 PM"
-              endDateTime="2024-12-12 12:00 PM"
-              location="Mumbai, Maharashtra"
-              category="Tech"
-              isFree={true}
-              imgUrl="/hero-2.jpg"
-            />
-          </Link>
-          <Link href="/events/6681f29fbb3319cd18f438ce">
-            <CollectionCard
-              title="Event 1"
-              startDateTime="2024-12-12 12:00 PM"
-              endDateTime="2024-12-12 12:00 PM"
-              location="Mumbai, Maharashtra"
-              category="Tech"
-              isFree={true}
-              imgUrl="/hero-2.jpg"
-            />
-          </Link>
+          {event.map((event: any)=> {
+            return (
+              <CollectionCard
+                id={event._id}
+                title={event.title}
+                category={event.category.name}
+                imgUrl={event.imageUrl}
+                isFree={event.isFree}
+                startDateTime={event.startDateTime}
+                endDateTime={event.endDateTime}
+                location={event.location}
+              />
+            );
+          })}
         </div>
       </section>
       <Separator />
