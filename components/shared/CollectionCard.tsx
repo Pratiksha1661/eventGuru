@@ -1,78 +1,77 @@
+import { IEvent } from '@/lib/database/models/event.model'
 import { formatDateTime } from '@/lib/utils'
+import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react'
+import { ConfirmDelete } from './ConfirmDelete'
+import { FaPencil } from 'react-icons/fa6'
 
-import { FaMapPin } from 'react-icons/fa6'
-import { FaCalendar } from 'react-icons/fa6'
-import { FaIndianRupeeSign } from 'react-icons/fa6'
-
-type CollectionCardProps = {
-  id: any
-  title: string
-  startDateTime: Date
-  endDateTime: Date
-  location: string
-  category: string
-  isFree: boolean
-  imgUrl: string
+type CardProps = {
+  event: IEvent,
+  hasOrderLink?: boolean,
+  hidePrice?: boolean
 }
 
-const CollectionCard = ({ id, title, startDateTime, endDateTime, location, category, isFree, imgUrl }: CollectionCardProps) => {
+const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
+  const { userId }: { userId: string | null } = auth();
+
+  const isEventCreator = userId === event.organizer._id.toString();
+
   return (
-    <div className='md:px-4 px-4 md:py-6 py-4 md:min-w-[300px] md:max-w-[350px] md:mt-5 rounded-lg shadow-md hover:scale-105 transition-all duration-200 ease-in-out flex flex-col justify-between md:min-h-[350px] md:max-h-[500px]'>
-      <div className='flex flex-col'>
-        <Link href={`/events/${id}`}>
-          <div className='cursor-pointer'>
-            <Image
-              src={imgUrl}
-              alt='Event Image'
-              width={300}
-              height={200}
-              className='rounded-lg md:max-h-[250px] md:min-h-[200px] object-cover w-full'
-            />
-          </div>
+    <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
+      <Link
+        href={`/events/${event._id}`}
+        style={{ backgroundImage: `url(${event.imageUrl})` }}
+        className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
+      />
+      {/* IS EVENT CREATOR ... */}
+
+      {isEventCreator && !hidePrice && (
+        <div className="absolute right-2 top-2 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all z-50">
+          <Link href={`/events/${event._id}/update`}>
+            <FaPencil className="text-primary-500" />
+          </Link>
+
+          <ConfirmDelete eventId={event._id} />
+        </div>
+      )}
+
+      <div
+        className="flex min-h-[230px] flex-col gap-3 p-5 md:gap-4"
+      >
+        {!hidePrice && <div className="flex gap-2">
+          <span className="w-min rounded-full bg-green-100 px-4 py-1 text-green-60">
+            {event.isFree ? 'FREE' : `$${event.price}`}
+          </span>
+          <p className="w-min rounded-full bg-grey-500/10 px-4 py-1 text-grey-500 line-clamp-1">
+            {event.category.name}
+          </p>
+        </div>}
+
+        <p className="p-medium-18 text-grey-500">
+          {formatDateTime(event.startDateTime).dateTime}
+        </p>
+
+        <Link href={`/events/${event._id}`}>
+          <p className="md:p-medium-20 line-clamp-2 flex-1 text-black">{event.title}</p>
         </Link>
-        <div className='mt-3'>
-          <h3 className='text-lg font-bold'>{title}</h3>
-        </div>
-        <div className='flex items-center mt-2'>
-          <p className='text-sm text-gray-500 flex gap-1 items-center'>
-            <FaCalendar className='mr-1' />
-            <div className='flex flex-col items-center'>
-              <span>
-                {formatDateTime(startDateTime).dateOnly} - {' '}
-                {formatDateTime(startDateTime).timeOnly}
-              </span>
 
-              <span>
-                {formatDateTime(endDateTime).dateOnly} - {' '}
-                {formatDateTime(endDateTime).timeOnly}
-              </span>
-            </div>
+        <div className="flex-between w-full">
+          <p className="text-grey-600">
+            {event.organizer.firstName} {event.organizer.lastName}
           </p>
-        </div>
-        <div className='flex items-center mt-2'>
-          <p className='text-sm text-gray-500 flex gap-1 items-center'>
-            <FaMapPin className='mr-1' /> {location}
-          </p>
-        </div>
 
-      </div>
-      <div>
-        <div className='mt-3'>
-          <div className='flex gap-2'>
-            <div className='px-5 py-2 text-sm bg-green-100 text-green-600 font-bold rounded-md flex items-center'>
-              {/* <FaIndianRupeeSign className='mr-1' /> 200 */}
-              {isFree ? 'Free' : `Paid`}
-            </div>
-            <div className='px-5 py-2 text-sm bg-slate-200 rounded-md font-bold text-accent'>
-              {category}
-            </div>
-          </div>
+          {hasOrderLink && (
+            <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
+              <p className="text-primary-500">Order Details</p>
+              <Image src="/assets/icons/arrow.svg" alt="search" width={10} height={10} />
+            </Link>
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-export default CollectionCard
+export default Card

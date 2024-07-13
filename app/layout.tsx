@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const raleway = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "EventGuru",

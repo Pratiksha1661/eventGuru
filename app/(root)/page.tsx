@@ -1,23 +1,24 @@
-"use client"
-
-import CollectionCard from "@/components/shared/CollectionCard";
+import CategoryFilter from "@/components/shared/FilterCategory";
+import Search from "@/components/shared/Search";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getAllEvents } from "@/lib/actions/event.actions";
+import { SearchParamProps } from "@/types";
+import Collection from "@/components/shared/Collection";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [event, setEvents] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const allEvents = await getAllEvents();
-      setEvents(allEvents);
-    };
-    fetchData();
-  }, []);
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || '';
+  const category = (searchParams?.category as string) || '';
+
+  const events = await getAllEvents({
+    query: searchText,
+    category,
+    page,
+    limit: 6
+  })
 
   return (
     <>
@@ -60,22 +61,20 @@ export default function Home() {
         <div className="text-center">
           <h3 className="font-bold text-2xl">Some Hosted Events</h3>
         </div>
-        <div className="flex gap-4 md:justify-between justify-center flex-wrap mt-1">
-          {event.map((event: any)=> {
-            return (
-              <CollectionCard
-                id={event._id}
-                title={event.title}
-                category={event.category.name}
-                imgUrl={event.imageUrl}
-                isFree={event.isFree}
-                startDateTime={event.startDateTime}
-                endDateTime={event.endDateTime}
-                location={event.location}
-              />
-            );
-          })}
+        <div className="flex w-full flex-col gap-5 md:flex-row items-center">
+          <Search />
+          <CategoryFilter />
         </div>
+
+        <Collection
+          data={events?.data}
+          emptyTitle="No Events Found"
+          emptyStateSubtext="Come back later"
+          collectionType="All_Events"
+          limit={6}
+          page={page}
+          totalPages={events?.totalPages}
+        />
       </section>
       <Separator />
     </>
