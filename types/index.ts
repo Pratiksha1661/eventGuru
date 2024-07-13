@@ -62,9 +62,51 @@ export type Event = {
   }
 }
 
+export type DeleteEventParams = {
+  eventId: string
+  path: string
+}
+
+export type UpdateEventParams = {
+  userId: string
+  event: {
+    _id: string
+    title: string
+    imageUrl: string
+    description: string
+    location: string
+    startDateTime: Date
+    endDateTime: Date
+    categoryId: string
+    price: string
+    isFree: boolean
+    url: string
+  }
+  path: string
+}
+
+export type GetAllEventsParams = {
+  query: string
+  category: string
+  limit: number
+  page: number
+}
+
 export type EventsByCategoryParams = {
   categoryId: string
   eventId: string
   limit?: number
   page: number | string
 }
+
+export type UrlQueryParams = {
+  params: string
+  key: string
+  value: string | null
+}
+
+export type RemoveUrlQueryParams = {
+  params: string
+  keysToRemove: string[]
+}
+
