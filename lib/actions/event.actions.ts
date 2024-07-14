@@ -1,6 +1,6 @@
 "use server"
 
-import { CreateEventParams, DeleteEventParams, EventsByCategoryParams, GetAllEventsParams } from "@/types";
+import { CreateEventParams, DeleteEventParams, EventsByCategoryParams, GetAllEventsParams, UpdateEventParams } from "@/types";
 import { connectToDatabase } from "../database";
 import { handleError } from "../utils";
 import User from "../database/models/user.model";
@@ -110,6 +110,42 @@ export async function deleteEvent({ eventId, path }: DeleteEventParams) {
 
         const deletedEvent = await Event.findByIdAndDelete(eventId)
         if (deletedEvent) revalidatePath(path)
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+export async function updateEvent({ userId, event, path }: UpdateEventParams) {
+    try {
+        await connectToDatabase()
+
+        const eventToUpdate = await Event.findById(event._id)
+        if (!eventToUpdate || eventToUpdate.organizer.toHexString() !== userId) {
+            throw new Error('Unauthorized or event not found')
+        }
+
+        const updatedEvent = await Event.findByIdAndUpdate(
+            event._id,
+            { ...event, category: event.categoryId },
+            { new: true }
+        )
+        revalidatePath(path)
+
+        return JSON.parse(JSON.stringify(updatedEvent))
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+export async function getEventById(eventId: string) {
+    try {
+        await connectToDatabase()
+
+        const event = await populateOptions(Event.findById(eventId))
+
+        if (!event) throw new Error('Event not found')
+
+        return JSON.parse(JSON.stringify(event))
     } catch (error) {
         handleError(error)
     }

@@ -23,23 +23,33 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "../ui/checkbox";
 import { useUploadThing } from "@/lib/uploadthing";
-import { createEvent } from "@/lib/actions/event.actions";
+import { createEvent, updateEvent } from "@/lib/actions/event.actions";
 import { useRouter } from "next/navigation";
+import { IEvent } from "@/lib/database/models/event.model";
 
 type eventFormProps = {
   userId: string;
   type: "Create" | "Edit";
+  event?: IEvent,
+  eventId?: string
 };
 
-const EventForm = ({ userId, type }: eventFormProps) => {
+const EventForm = ({ userId, type, event, eventId }: eventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing('imageUploader')
   const router = useRouter();
+  const initialValues = event && type === 'Edit'
+    ? {
+      ...event,
+      startDateTime: new Date(event.startDateTime),
+      endDateTime: new Date(event.endDateTime)
+    }
+    : eventDefaultValues;
   const defaultValues = eventDefaultValues;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues,
+    defaultValues: initialValues,
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -66,6 +76,28 @@ const EventForm = ({ userId, type }: eventFormProps) => {
         if (newEvent) {
           form.reset();
           router.push(`/events/${newEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (type === 'Edit') {
+      if (!eventId) {
+        router.back()
+        return;
+      }
+
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`
+        })
+
+        if (updatedEvent) {
+          form.reset();
+          router.push(`/events/${updatedEvent._id}`)
         }
       } catch (error) {
         console.log(error);
