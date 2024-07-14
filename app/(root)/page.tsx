@@ -5,13 +5,15 @@ import { Separator } from "@/components/ui/separator";
 import { getAllEvents } from "@/lib/actions/event.actions";
 import { SearchParamProps } from "@/types";
 import Collection from "@/components/shared/Collection";
-
+import { auth } from '@clerk/nextjs/server'
+import Link from "next/link";
 import Image from "next/image";
 
 export default async function Home({ searchParams }: SearchParamProps) {
   const page = Number(searchParams?.page) || 1;
   const searchText = (searchParams?.query as string) || '';
   const category = (searchParams?.category as string) || '';
+  const { userId }: { userId: string | null } = auth();
 
   const events = await getAllEvents({
     query: searchText,
@@ -40,7 +42,9 @@ export default async function Home({ searchParams }: SearchParamProps) {
                 className="w-full md:w-auto transition-all duration-200"
                 size="lg"
               >
-                Get Started
+                <Link href={userId? '/events/create' : '/sign-in'}>
+                  Get Started
+                </Link>
               </Button>
             </div>
           </div>

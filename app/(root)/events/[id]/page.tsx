@@ -14,6 +14,7 @@ import { FaRegCalendarCheck } from "react-icons/fa6";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaLink } from "react-icons/fa6";
+import Collection from '@/components/shared/Collection';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
     const event = await getEvent(id);
@@ -91,12 +92,20 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
                     <p>{event.description}</p>
                 </div>
             </section>
-            <section>
+            <section className='lg:my-5 my-0 lg:px-40 px-10'>
                 <Separator className='my-5' />
                 <div className='lg:mx-40 mx-10'>
                     <h3 className='font-semibold text-2xl text-center'>Some Related Events</h3>
-
                 </div>
+                <Collection
+                    data={relatedEvents?.data}
+                    emptyTitle="No Events Found"
+                    emptyStateSubtext="Come back later"
+                    collectionType="All_Events"
+                    limit={3}
+                    page={searchParams.page as string}
+                    totalPages={relatedEvents?.totalPages}
+                />
             </section>
         </>
     )
