@@ -3,7 +3,6 @@
 import { useTransition } from 'react'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,6 +14,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { FaTrash } from 'react-icons/fa6'
 
 import { deleteEvent } from '@/lib/actions/event.actions'
 
@@ -25,7 +25,7 @@ export const ConfirmDelete = ({ eventId }: { eventId: string }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger>
-                <Image src="/assets/icons/delete.svg" alt="edit" width={20} height={20} />
+                <FaTrash className="text-red-500 cursor-pointer" />
             </AlertDialogTrigger>
 
             <AlertDialogContent className="bg-white">

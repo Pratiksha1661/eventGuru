@@ -4,6 +4,10 @@ export const navLinks = [
     route: "/",
   },
   {
+    label: "My Events",
+    route: "/events/my-events",
+  },
+  {
     label: "Create",
     route: "/events/create",
   },

@@ -16,13 +16,11 @@ type CardProps = {
 
 const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
   const { sessionClaims } = auth();
-
   const userId = sessionClaims?.userId as string;
-
   const isEventCreator = userId === event.organizer._id.toString();
 
   return (
-    <div className="bg-white px-4 py-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex flex-col min-h-[530px] max-h-[700px] max-w-[400px] hover:-translate-y-2">
+    <div className="bg-white px-4 py-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex flex-col min-h-[530px] max-h-[700px] max-w-[400px] hover:-translate-y-2 relative">
       <div className='w-full mb-3'>
         <Link
           href={`/events/${event._id}`}
@@ -41,7 +39,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
 
       {isEventCreator && !hidePrice && (
         <div className="absolute right-2 top-2 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all z-50">
-          <Link href={`/events/${event._id}/update`}>
+          <Link href={`/events/${event._id}/edit`}>
             <FaPencil className="text-primary-500" />
           </Link>
 
