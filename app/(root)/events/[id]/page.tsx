@@ -15,6 +15,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaLink } from "react-icons/fa6";
 import Collection from '@/components/shared/Collection';
+import CheckoutBtn from '@/components/shared/CheckoutBtn';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
     const event = await getEvent(id);
@@ -80,9 +81,7 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
                             </span>
                         </div>
                         <div>
-                            <Button>
-                                Resevere your spot
-                            </Button>
+                            <CheckoutBtn event={event} />
                         </div>
                     </div>
                 </div>
