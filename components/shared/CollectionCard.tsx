@@ -95,11 +95,17 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
         </div>
       </div>
 
-      <div className='mt-auto ms-auto'>
+      {!hasOrderLink && (<div className='mt-auto ms-auto'>
         <Link href={`/events/${event._id}`}>
           <Button variant={"default"}>Know More</Button>
         </Link>
-      </div>
+      </div>)}
+
+      {hasOrderLink && (
+        <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
+          <Button className='ms-auto'>Order Details</Button>
+        </Link>
+      )}
     </div>
   )
 }

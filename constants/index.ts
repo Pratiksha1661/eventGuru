@@ -12,6 +12,10 @@ export const navLinks = [
     route: "/events/create",
   },
   {
+    label: "Profile",
+    route: "/profile",
+  },
+  {
     label: "About",
     route: "/about",
   },

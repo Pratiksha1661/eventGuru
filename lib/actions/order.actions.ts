@@ -111,7 +111,9 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
         ])
 
         return JSON.parse(JSON.stringify(orders))
-    } catch (error) {
+    } catch (error: any) {
+        console.error('Error in getOrdersByEvent:', error.message);
+        console.error('Stack trace:', error.stack);
         handleError(error)
     }
 }
