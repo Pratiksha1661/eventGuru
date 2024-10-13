@@ -81,7 +81,7 @@ This will generate a static build in the `.next` folder that can be deployed to 
 
 - **Creating an Event**: Start by logging in and creating a new event. Fill in event details such as name, date, location, and description. Customize the event page with images and a theme that fits your branding.
   
-  ![Create Event](./Screenshot%202024-10-06%20at%2010.09.09%20PM.png)
+(![Create Event](<Screenshot 2024-10-06 at 10.09.09 PM.png>))
   
   As shown above, the user can easily create an event by providing the necessary information such as the event title, description, location, and time. Users can also upload images to personalize their event page.
 
@@ -89,7 +89,7 @@ This will generate a static build in the `.next` folder that can be deployed to 
 - **Real-Time Schedule Updates**: Update the event schedule anytime, and your attendees will see changes immediately.
 - **Booking an Event**: Users can explore available events, check event details, and book a seat by clicking the "Book Event" button.
   
-  ![Book Event](./Screenshot%202024-10-06%20at%2010.10.17%20PM.png)
+(![Book Event](<Screenshot 2024-10-06 at 10.10.17 PM.png>))
   
   In the example above, users can see all the event details, including date, time, location, and ticket availability. Once booked, the event details are shown clearly with confirmation messages, making it easier for attendees to track their bookings.
 
